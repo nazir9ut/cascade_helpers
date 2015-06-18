@@ -5,6 +5,13 @@ from PIL import Image
 import cv2
 from random import randint
 from peewee import *
+import os
+
+
+
+
+mypath = "/home/naz/Desktop/uuu/"
+img_ext = ".jpg"
 
 
 
@@ -37,13 +44,22 @@ if not Image.table_exists():
 
 
 
-mypath = "/home/naz/Desktop/uuu/"
+
 onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
 
 
 
 for file in onlyfiles:
+
+    # Skip files without specified extension
+    print(os.path.splitext(mypath + file)[1])
+    if(os.path.splitext(mypath + file)[1] != img_ext):
+        print("ERR: not correct extension")
+        continue
+
+
+
 
     # Skip already marked images]
     exists = Image.select().where(Image.file == file).exists()
@@ -111,6 +127,7 @@ for file in onlyfiles:
         if k == 32 and (-1 not in [x0, y0, x1, y1, x2, y2, x3 ,y3]) and y0 < y3 and y0 < y2 and y1 < y3 and y1 < y2 and x0 < x1 and x0 < x2 :
             # Save plate coordinates to DB
             Image.create(path=mypath, file=file, x0=x0, y0=y0, x1=x1, y1=y1, x2=x2, y2=y2, x3=x3 ,y3=y3)
+            print((x0, y0), (x1, y1), (x2, y2), (x3 ,y3))
             x0 = y0 = x1 = y1 = x2 = y2 = x3 = y3 = -1
             break
 
@@ -121,5 +138,5 @@ for file in onlyfiles:
     cv2.destroyWindow("img")
 
 
-    # print((x0, y0), (x1, y1), (x2, y2), (x3 ,y3))
+
 
