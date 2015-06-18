@@ -10,7 +10,7 @@ import os
 
 
 
-mypath = "/home/naz/Desktop/uuu/"
+mypath = "/home/naz/Desktop/uuu/Train/"
 img_ext = ".jpg"
 
 
@@ -54,6 +54,7 @@ for file in onlyfiles:
 
     # Skip files without specified extension
     print(os.path.splitext(mypath + file)[1])
+
     if(os.path.splitext(mypath + file)[1] != img_ext):
         print("ERR: not correct extension")
         continue
@@ -116,6 +117,12 @@ for file in onlyfiles:
     img = cv2.imread(mypath + file, cv2.IMREAD_COLOR)
     cv2.namedWindow('img')
     cv2.setMouseCallback('img',draw_circle)
+
+
+
+    # print('------------------')
+    # print(file)
+
 
 
 

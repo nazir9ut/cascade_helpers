@@ -5,11 +5,12 @@ from peewee import *
 from math import floor
 
 
-mypath = "/home/naz/Desktop/uuu/"
-# xml_file = "training.xml"
-# data_dir = "Train/"
-xml_file = "testing.xml"
-data_dir = "Test/"
+mypath = "/home/naz/Desktop/uuu/Train/"
+xml_file_path = "/home/naz/Desktop/uuu/"
+xml_file = "training.xml"
+data_dir = "Train/"
+# xml_file = "testing.xml"
+# data_dir = "Test/"
 
 
 
@@ -70,12 +71,15 @@ for file in img_files:
     images.append(image)
 
     margin = (file.y3 - file.y0) / 2.0
+    width = int(floor(file.x1 - file.x0 + 2 * margin))
+    height = width / 3
 
     box = etree.Element('box')
     box.attrib['top'] = str(int(floor(file.y0 - margin)))
     box.attrib['left'] = str(int(floor(file.x0 - margin)))
-    box.attrib['width'] = str(int(floor(file.x1 - file.x0 + 2 * margin)))
-    box.attrib['height'] = str(int(floor(file.y3 - file.y0 + 2 * margin)))
+    box.attrib['width'] = str(width)
+    # box.attrib['height'] = str(int(floor(file.y3 - file.y0 + 2 * margin)))
+    box.attrib['height'] = str(height)
     image.append(box)
 
 
@@ -90,7 +94,7 @@ print s
 
 
 
-with open(mypath + xml_file, 'w') as file:
+with open(xml_file_path + xml_file, 'w') as file:
     file.write("""<?xml version='1.0' encoding='ISO-8859-1'?>\n""")
     file.write("""<?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>""")
     file.write("\n")
