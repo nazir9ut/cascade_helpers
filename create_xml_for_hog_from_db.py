@@ -16,6 +16,13 @@ from mark_plates_settings import Image
 
 
 
+# check if all images are marked
+result = Image.select().where((Image.x0 == -1) | (Image.y0 == -1) | (Image.x1 == -1)  | (Image.y1 == -1) | (Image.x2 == -1)  | (Image.y2 == -1) |  (Image.x3 == -1)  | (Image.y3 == -1))
+
+if result.count() > 0:
+    raise ValueError('Err. Not all images are marked !')
+
+
 
 
 
@@ -46,8 +53,6 @@ root.append(images)
 
 
 
-# check if table is populated with images
-print Image.select().count()
 
 
 

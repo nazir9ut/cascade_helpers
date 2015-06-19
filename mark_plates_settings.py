@@ -8,6 +8,7 @@ from PIL import Image as ImgLib
 data_dir = "Train/"
 xml_file_path = "/home/naz/Desktop/rects/"
 mypath = xml_file_path + data_dir
+max_img_width = 1200
 
 xml_file = "training.xml"
 
@@ -59,6 +60,10 @@ for file in onlyfiles:
         x0 = y0 = x1 = y1 = x2 = y2 = x3 = y3 = -1
         width = size[0]
         height = size[1]
+
+        if width > max_img_width:
+            raise ValueError('Err. Image ' + file + ' is too large')
+
         Image.create(path=mypath, file=file, width = width, height = height, x0=x0, y0=y0, x1=x1, y1=y1, x2=x2, y2=y2, x3=x3 ,y3=y3)
 
 
