@@ -1,12 +1,12 @@
 from os import listdir
 from os import remove
 from os.path import isfile, join
-from PIL import Image
+from PIL import Image as ImgLib
 import cv2
 from random import randint
 from peewee import *
 import os
-
+from enum import Enum
 
 
 
@@ -15,8 +15,12 @@ img_ext = ".jpg"
 
 
 
+
+
+
+
 # Database settings
-db = SqliteDatabase('my_database.db', threadlocals=True)
+db = SqliteDatabase('mydb.db', threadlocals=True)
 db.connect()
 
 class BaseModel(Model):
@@ -26,6 +30,8 @@ class BaseModel(Model):
 class Image(BaseModel):
     path = TextField()
     file = TextField(unique=True)
+    width = IntegerField()
+    height = IntegerField()
     x0 = IntegerField()
     y0 = IntegerField()
     x1 = IntegerField()
@@ -45,7 +51,27 @@ if not Image.table_exists():
 
 
 
+
+
+
 onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
+
+
+# Populate table with all images in folder using initial values
+for file in onlyfiles:
+    exists = Image.select().where(Image.file == file).exists()
+
+    if not exists:
+        size = ImgLib.open(mypath + file).size
+        x0 = y0 = x1 = y1 = x2 = y2 = x3 = y3 = -1
+        width = size[0]
+        height = size[1]
+        Image.create(path=mypath, file=file, width = width, height = height, x0=x0, y0=y0, x1=x1, y1=y1, x2=x2, y2=y2, x3=x3 ,y3=y3)
+
+
+
+
+
 
 
 
@@ -53,8 +79,7 @@ onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 for file in onlyfiles:
 
     # Skip files without specified extension
-    print(os.path.splitext(mypath + file)[1])
-
+    # print(os.path.splitext(mypath + file)[1])
     if(os.path.splitext(mypath + file)[1] != img_ext):
         print("ERR: not correct extension")
         continue
@@ -62,55 +87,31 @@ for file in onlyfiles:
 
 
 
-    # Skip already marked images]
-    exists = Image.select().where(Image.file == file).exists()
-    if exists:
+    # Skip already marked images for
+    rows = Image.select().where((Image.file == file) & (Image.x0 == -1) & (Image.y0 == -1))
+
+
+
+    # this file for this coordinates is processed
+    if rows.count() == 0:
         continue
+    else :
+        row = rows[0]
 
-
-
-
-    x0 = y0 = x1 = y1 = x2 = y2 = x3 = y3 = -1
 
 
 
 
     # mouse callback function
     def draw_circle(event,x,y,flags,param):
-
         if flags == cv2.EVENT_FLAG_LBUTTON:
-
-            cv2.circle(img,(x,y),3,(0,0,255),3)
+            cv2.circle(img,(x,y),2,(0,0,255),2)
 
             global x0
             x0 = x
             global y0
             y0 = y
 
-        elif flags == cv2.EVENT_FLAG_MBUTTON:
-            cv2.circle(img,(x,y),3,(0,255,0),3)
-
-            global x1
-            x1 = x
-            global y1
-            y1 = y
-
-        elif flags == (cv2.EVENT_FLAG_LBUTTON + cv2.EVENT_FLAG_CTRLKEY):
-            # print(flags)
-            cv2.circle(img,(x,y),3,(255,0,0),3)
-
-            global x3
-            x3 = x
-            global y3
-            y3 = y
-
-        elif flags == (cv2.EVENT_FLAG_MBUTTON + cv2.EVENT_FLAG_CTRLKEY):
-            cv2.circle(img,(x,y),3,(255,0,255),3)
-
-            global x2
-            x2 = x
-            global y2
-            y2 = y
 
 
 
@@ -120,22 +121,20 @@ for file in onlyfiles:
 
 
 
-    # print('------------------')
-    # print(file)
-
 
 
 
     while(1):
         cv2.imshow('img',img)
         k = cv2.waitKey(1) & 0xFF
-        # print(x0, y0, x1, y1, x2, y2, x3 ,y3)
 
-        if k == 32 and (-1 not in [x0, y0, x1, y1, x2, y2, x3 ,y3]) and y0 < y3 and y0 < y2 and y1 < y3 and y1 < y2 and x0 < x1 and x0 < x2 :
+        if k == 32 and (-1 not in [x0, y0]) :
             # Save plate coordinates to DB
-            Image.create(path=mypath, file=file, x0=x0, y0=y0, x1=x1, y1=y1, x2=x2, y2=y2, x3=x3 ,y3=y3)
-            print((x0, y0), (x1, y1), (x2, y2), (x3 ,y3))
-            x0 = y0 = x1 = y1 = x2 = y2 = x3 = y3 = -1
+            row.x0 = x0
+            row.y0 = y0
+            row.save()
+            print((x0, y0))
+            x0 = y0 = -1
             break
 
 

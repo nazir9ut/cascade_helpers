@@ -5,8 +5,8 @@ from peewee import *
 from math import floor
 
 
-mypath = "/home/naz/Desktop/uuu/Train/"
-xml_file_path = "/home/naz/Desktop/uuu/"
+mypath = "/home/naz/Desktop/rects/Train/"
+xml_file_path = "/home/naz/Desktop/rects/"
 xml_file = "training.xml"
 data_dir = "Train/"
 # xml_file = "testing.xml"
@@ -70,13 +70,19 @@ for file in img_files:
     image.attrib['file'] = data_dir + file.file
     images.append(image)
 
+    # margin = (file.y3 - file.y0) / 2.0
+    # width = int(floor(file.x1 - file.x0 + 2 * margin))
+    # height = width / 3
+
     margin = (file.y3 - file.y0) / 2.0
-    width = int(floor(file.x1 - file.x0 + 2 * margin))
-    height = width / 3
+    width = int(floor(file.x1 - file.x0))
+    height = width / 1
 
     box = etree.Element('box')
-    box.attrib['top'] = str(int(floor(file.y0 - margin)))
-    box.attrib['left'] = str(int(floor(file.x0 - margin)))
+    # box.attrib['top'] = str(int(floor(file.y0 - margin)))
+    # box.attrib['left'] = str(int(floor(file.x0 - margin)))
+    box.attrib['top'] = str(int(floor(file.y0)))
+    box.attrib['left'] = str(int(floor(file.x0)))
     box.attrib['width'] = str(width)
     # box.attrib['height'] = str(int(floor(file.y3 - file.y0 + 2 * margin)))
     box.attrib['height'] = str(height)
