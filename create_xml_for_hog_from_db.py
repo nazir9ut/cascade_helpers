@@ -3,38 +3,20 @@ from os import listdir
 from os.path import isfile, join
 from peewee import *
 from math import floor
+from mark_plates_settings import mypath
+from mark_plates_settings import xml_file_path
+from mark_plates_settings import xml_file
+from mark_plates_settings import data_dir
 
-
-mypath = "/home/naz/Desktop/rects/Train/"
-xml_file_path = "/home/naz/Desktop/rects/"
-xml_file = "training.xml"
-data_dir = "Train/"
-# xml_file = "testing.xml"
-# data_dir = "Test/"
-
+from mark_plates_settings import Image
 
 
 
 
-# Database settings
-db = SqliteDatabase('my_database.db', threadlocals=True)
-db.connect()
 
-class BaseModel(Model):
-    class Meta:
-        database = db
 
-class Image(BaseModel):
-    path = TextField()
-    file = TextField(unique=True)
-    x0 = IntegerField()
-    y0 = IntegerField()
-    x1 = IntegerField()
-    y1 = IntegerField()
-    x2 = IntegerField()
-    y2 = IntegerField()
-    x3 = IntegerField()
-    y3 = IntegerField()
+
+
 
 
 
@@ -63,7 +45,16 @@ root.append(images)
 
 
 
-img_files =  Image.select().where(Image.path == mypath)
+
+# check if table is populated with images
+print Image.select().count()
+
+
+
+
+
+
+img_files =  Image.select()
 
 for file in img_files:
     image = etree.Element('image')
@@ -76,7 +67,7 @@ for file in img_files:
 
     margin = (file.y3 - file.y0) / 2.0
     width = int(floor(file.x1 - file.x0))
-    height = width / 1
+    height = int(floor(file.y3 - file.y0))
 
     box = etree.Element('box')
     # box.attrib['top'] = str(int(floor(file.y0 - margin)))
