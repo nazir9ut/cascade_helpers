@@ -5,6 +5,7 @@ from os.path import isfile, join
 from PIL import Image as ImgLib
 
 
+
 data_dir = "Train/"
 xml_file_path = "/home/naz/Desktop/rects/"
 mypath = xml_file_path + data_dir
@@ -17,6 +18,9 @@ xml_file = "training.xml"
 img_ext = [".jpg", ".JPG"]
 
 stroke = 2
+
+
+scr_size = 5000
 
 
 
@@ -71,8 +75,6 @@ for file in onlyfiles:
         #     raise ValueError('Err. Image ' + file + ' is too large')
 
         Image.create(path=mypath, file=file, width = width, height = height, x0=x0, y0=y0, x1=x1, y1=y1, x2=x2, y2=y2, x3=x3 ,y3=y3)
-
-
 
 
 

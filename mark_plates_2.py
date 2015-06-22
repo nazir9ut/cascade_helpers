@@ -56,13 +56,27 @@ for file in onlyfiles:
 
 
     img = cv2.imread(mypath + file, cv2.IMREAD_COLOR)
-
+    print(img.shape)
 
     #
     draw_existing_points(row, img)
 
 
-    cv2.namedWindow('img')
+    if(img.shape[1] > 1920):
+        print("WIDTH TOO LARGE")
+        aspect = 1920.0 / img.shape[1]
+        cv2.namedWindow('img', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('img', 1920, int(img.shape[0] * aspect))
+    elif(img.shape[0] > 1200):
+        print("HEIGHT TOO LARGE")
+        aspect = 1200.0 / img.shape[0]
+        cv2.namedWindow('img', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('img', int(img.shape[1] * aspect), 1200)
+    else:
+        print("NO RESIZE")
+        cv2.namedWindow('img')
+
+
     cv2.setMouseCallback('img',draw_circle)
 
 
