@@ -20,7 +20,7 @@ for file in onlyfiles:
 
     # Skip files without specified extension
     # print(os.path.splitext(mypath + file)[1])
-    if(os.path.splitext(mypath + file)[1] != img_ext):
+    if(os.path.splitext(mypath + file)[1] not in img_ext):
         print("ERR: not correct extension")
         continue
 
