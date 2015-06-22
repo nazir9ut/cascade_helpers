@@ -13,7 +13,27 @@ for file in onlyfiles:
 
     pts = np.array([[row.x0, row.y0],[row.x1, row.y1],[row.x2, row.y2], [row.x3, row.y3]], np.int32)
     pts = pts.reshape((-1,1,2))
-    img = cv2.polylines(img,[pts],True,(255,0,255), 1)
+    # img = cv2.polylines(img,[pts],True,(0,255,255), 2)
+
+
+    region = np.array([[row.x0, row.y0],[row.x1, row.y1],[row.x2, row.y2], [row.x3, row.y3]], np.int32)
+
+    # convert to contour format
+    cnt = region.reshape(-1, 1, 2)
+
+
+
+    # get bounding rectangle
+    x,y,w,h = cv2.boundingRect(cnt)
+
+
+    # draw rectangle
+    margin_x = 20
+    margin_y = 10
+    cv2.rectangle(img, (x - margin_x, y - margin_y), (x+w + margin_x, y+h + margin_y), (255, 0, 255),1)
+
+
+
 
 
 
