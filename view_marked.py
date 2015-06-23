@@ -1,10 +1,18 @@
 from mark_plates_settings import *
 import cv2
 import numpy as np
+import mark_view_helpers
 
 
+
+exit = False
 
 for file in onlyfiles:
+    print(file)
+
+
+
+
     row = Image.select().where((Image.file == file))[0]
 
 
@@ -28,42 +36,35 @@ for file in onlyfiles:
 
 
     # draw rectangle
-    margin_x = 20
-    margin_y = 10
-    cv2.rectangle(img, (x - margin_x, y - margin_y), (x+w + margin_x, y+h + margin_y), (255, 0, 255),1)
+    margin_x = (row.y3 - row.y0) / 2
+    margin_y = (w + 2 * margin_x - 3 * h) / 6
+    cv2.rectangle(img, (x - margin_x, y - margin_y), (x + w + margin_x, y + h + margin_y), (255, 0, 255),2)
 
 
 
 
 
 
-    if(img.shape[1] > 1920):
-        print("WIDTH TOO LARGE")
-        aspect = 1920.0 / img.shape[1]
-        cv2.namedWindow('win', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('win', 1920, int(img.shape[0] * aspect))
-    elif(img.shape[0] > 1200):
-        print("HEIGHT TOO LARGE")
-        aspect = 1200.0 / img.shape[0]
-        cv2.namedWindow('win', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('win', int(img.shape[1] * aspect), 1200)
-    else:
-        print("NO RESIZE")
-        cv2.namedWindow('win')
+    mark_view_helpers.adjust_window(img)
 
 
 
 
     while(1):
-        cv2.imshow('win',img)
+        cv2.imshow('img',img)
         k = cv2.waitKey(1) & 0xFF
 
         if k == 32:
             break
 
+        if k == 27:
+            exit = True
+            break
 
 
 
+    cv2.destroyWindow("img")
 
-    cv2.destroyWindow("win")
+    if exit == True:
+        break
 
