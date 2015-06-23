@@ -71,8 +71,8 @@ for file in onlyfiles:
 
         print(width)
 
-        # if width > max_img_width:
-        #     raise ValueError('Err. Image ' + file + ' is too large')
+        if width > max_img_width:
+            raise ValueError('Err. Image ' + file + ' is too large')
 
         Image.create(path=mypath, file=file, width = width, height = height, x0=x0, y0=y0, x1=x1, y1=y1, x2=x2, y2=y2, x3=x3 ,y3=y3)
 

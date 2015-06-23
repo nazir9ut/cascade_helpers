@@ -20,8 +20,14 @@ for file in onlyfiles:
     img = Image.open(mypath + file)
     # img.show()
     # print(file)
-    if img.size[0] > max_img_width:
-        img = img.resize((img.size[0] / 2, img.size[1] / 2), Image.BICUBIC)
+    width = img.size[0]
+    height = img.size[1]
+
+    print(width)
+
+    if width > max_img_width:
+        print(width)
+        img = img.resize((width / 2, height / 2), Image.BICUBIC)
         # print(file.split('.'))
         # img.save(mypath + file.split('.')[0] + '.jpg')
         # if(file.split('.')[1] == '.bmp'):

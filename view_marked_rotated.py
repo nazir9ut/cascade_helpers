@@ -5,6 +5,7 @@ import mark_view_helpers
 from math import acos
 from math import sqrt
 from math import degrees
+from math import atan2
 
 
 
@@ -27,37 +28,38 @@ for file in onlyfiles:
 
 
 
-    # todo tmp
-    row.y1 = row.y1 - 200
-    row.x1 = row.x1
-
     pts = np.array([[row.x0, row.y0], [row.x1, row.y1], [row.x2, row.y2], [row.x3, row.y3]], np.int32)
     pts = pts.reshape((-1, 1, 2))
     img = cv2.polylines(img, [pts], True, (0,255,255), 1)
 
 
-    print(row.x0, row.y0, row.x1, row.y1)
+    # print(row.x0, row.y0, row.x1, row.y1)
 
 
-    len1 = sqrt(row.x0 * row.x0 + row.y0 * row.y0)
-    len2 = sqrt(row.x1 * row.x1 + row.y1 * row.y1)
-
-    dot = row.x0 * row.x1 + row.y0 * row.y1
-
-
-    theta = acos((dot * 1.0) / (len1 * len2))
-    degrees = degrees(theta)
-
-    print(degrees)
-
-
-
-
-
+    # len1 = sqrt(row.x0 * row.x0 + row.y0 * row.y0)
+    # len2 = sqrt(row.x1 * row.x1 + row.y1 * row.y1)
+    #
+    # dot = row.x0 * row.x1 + row.y0 * row.y1
+    #
+    # a = (dot * 1.0) / (len1 * len2)
+    #
+    # theta = acos(a)
+    # print(theta)
+    #
+    # degree = degrees(theta)
+    #
+    # print(degree)
 
 
+    slope = (row.y1 - row.y0) / ((row.x1 - row.x0) * 1.0)
+
+    degree = degrees(np.arctan(slope))
+
+
+    # print(degree)
 
     mark_view_helpers.adjust_window(img)
+
 
 
 
@@ -65,13 +67,22 @@ for file in onlyfiles:
 
 
 
-    dst = cv2.warpAffine(img, M, (img_w, img_h))
 
+
+
+
+
+    print(M)
+
+
+    dst = cv2.warpAffine(img, M, (img_w, img_h))
+    mark_view_helpers.adjust_window(dst, win_name = 'dst')
 
 
 
     while(1):
         cv2.imshow('img', img)
+        cv2.imshow('dst', dst)
 
 
         k = cv2.waitKey(1) & 0xFF
