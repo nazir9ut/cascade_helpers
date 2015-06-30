@@ -80,6 +80,18 @@ for file in onlyfiles:
 
 
 
+
+    M = np.append(M, [[0, 0, 1]], axis=0)
+
+    print(np.dot(M, [187, 411, 1]))
+    # [ 204.44297695  470.09807621    1.        ]
+
+
+
+
+
+
+
     while(1):
         cv2.imshow('img', img)
         cv2.imshow('dst', dst)

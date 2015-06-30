@@ -4,7 +4,7 @@ from PIL import Image
 
 
 
-mypath = "/home/naz/Desktop/CropNumbers/Good/"
+mypath = "/home/naz/Desktop/two_lbp/Good/"
 onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
 for file in onlyfiles:
@@ -13,7 +13,7 @@ for file in onlyfiles:
 
 
 
-with open('/home/naz/Desktop/CropNumbers/Good.dat', 'w') as f:
+with open('/home/naz/Desktop/two_lbp/Good.dat', 'w') as f:
     for file in onlyfiles:
         img = Image.open(mypath + file)
         f.write('Good/' +  file + ' 1 0 0 ' + str(img.size[0]) + ' ' + str(img.size[1]) + '\n')
