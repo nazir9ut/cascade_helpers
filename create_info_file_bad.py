@@ -4,7 +4,7 @@ from PIL import Image
 from string_helpers import *
 
 
-base = '/home/naz/Desktop/1_lbp'
+base = '/home/naz/Desktop/1_haar'
 
 
 
