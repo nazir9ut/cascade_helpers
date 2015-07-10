@@ -1,4 +1,4 @@
-from mark_plates_settings import *
+from plate_helpers import *
 import cv2
 import numpy as np
 import mark_view_helpers

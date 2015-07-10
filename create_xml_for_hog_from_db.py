@@ -3,12 +3,12 @@ from os import listdir
 from os.path import isfile, join
 from peewee import *
 from math import floor
-from mark_plates_settings import mypath
-from mark_plates_settings import xml_file_path
-from mark_plates_settings import xml_file
-from mark_plates_settings import data_dir
+from plate_helpers import mypath
+from plate_helpers import xml_file_path
+from plate_helpers import xml_file
+from plate_helpers import data_dir
 
-from mark_plates_settings import Image
+from plate_helpers import Image
 
 
 

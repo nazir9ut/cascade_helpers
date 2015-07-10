@@ -1,16 +1,11 @@
-from os import listdir
-from os import remove
-from os.path import isfile, join
-from PIL import Image as ImgLib
 import cv2
-from random import randint
-from peewee import *
 import os
-from enum import Enum
+import glob
 
 # custom modules
-from mark_plates_settings import *
-from mark_plates_helpers import draw_existing_points
+from plate_helpers import *
+import plate_settings
+from plate_db import *
 
 
 
@@ -18,20 +13,24 @@ from mark_plates_helpers import draw_existing_points
 
 
 
-
-for file in onlyfiles:
-
-    # Skip files without specified extension
-    # print(os.path.splitext(mypath + file)[1])
-    if(os.path.splitext(mypath + file)[1] not in img_ext):
-        print("ERR: not correct extension")
-        continue
+db_table_init()
 
 
+
+
+files = glob.glob(os.path.join(plate_settings.path, '*.jpg'))
+
+
+
+
+
+for file in files:
+
+    path_and_file = os.path.join(plate_settings.path, file)
 
 
     # Skip already marked images for
-    rows = Image.select().where((Image.file == file) & (Image.x0 == -1) & (Image.y0 == -1))
+    rows = ImageModel.select().where((ImageModel.path_and_file == path_and_file) & (ImageModel.x0 == -1) & (ImageModel.y0 == -1))
 
 
 
@@ -43,12 +42,10 @@ for file in onlyfiles:
 
 
 
-
-
     # mouse callback function
     def draw_circle(event,x,y,flags,param):
         if flags == cv2.EVENT_FLAG_LBUTTON:
-            cv2.circle(img,(x,y), stroke, (0,0,255), stroke)
+            cv2.circle(img,(x,y), plate_settings.stroke, (0,0,255), plate_settings.stroke)
 
             global x0
             x0 = x
@@ -58,24 +55,12 @@ for file in onlyfiles:
 
 
 
-    img = cv2.imread(mypath + file, cv2.IMREAD_COLOR)
+    img = cv2.imread(path_and_file, cv2.IMREAD_COLOR)
     draw_existing_points(row, img)
 
 
 
-    if(img.shape[0] > 1200):
-        print("HEIGHT TOO LARGE")
-        aspect = 1200.0 / img.shape[0]
-        cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('img', int(img.shape[1] * aspect), 1200)
-    elif(img.shape[1] > 1920):
-        print("WIDTH TOO LARGE")
-        aspect = 1920.0 / img.shape[1]
-        cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('img', 1920, int(img.shape[0] * aspect))
-    else:
-        print("NO RESIZE")
-        cv2.namedWindow('img')
+    cv2.namedWindow('img')
 
 
     cv2.setMouseCallback('img',draw_circle)
@@ -83,10 +68,7 @@ for file in onlyfiles:
 
 
 
-
-
-
-
+    k = -1
     while(1):
         cv2.imshow('img',img)
         k = cv2.waitKey(1) & 0xFF
@@ -101,12 +83,14 @@ for file in onlyfiles:
             print("saving to DB")
             break
 
-
+        if k == 27:
+            break
 
 
 
     cv2.destroyWindow("img")
 
 
-
+    if k == 27:
+        break
 
