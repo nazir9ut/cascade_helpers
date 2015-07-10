@@ -24,7 +24,7 @@ files = glob.glob(os.path.join(plate_settings.path, '*.jpg'))
 
 
 
-for file in files:
+for i, file in enumerate(files):
 
     path_and_file = os.path.join(plate_settings.path, file)
 
@@ -39,6 +39,9 @@ for file in files:
         continue
     else :
         row = rows[0]
+        print("id = " + str(row.id))
+
+        print(path_and_file)
 
 
 
@@ -56,6 +59,8 @@ for file in files:
 
 
     img = cv2.imread(path_and_file, cv2.IMREAD_COLOR)
+
+
     draw_existing_points(row, img)
 
 
@@ -73,6 +78,8 @@ for file in files:
         cv2.imshow('img',img)
         k = cv2.waitKey(1) & 0xFF
 
+
+
         if k == 32 and (-1 not in [x0, y0]) :
             # Save plate coordinates to DB
             row.x0 = x0
@@ -84,6 +91,11 @@ for file in files:
             break
 
         if k == 27:
+            break
+
+        if k == 109:
+            row.delete_instance()
+            os.remove(path_and_file)
             break
 
 

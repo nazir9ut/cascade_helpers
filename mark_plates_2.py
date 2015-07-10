@@ -24,7 +24,7 @@ files = glob.glob(os.path.join(plate_settings.path, '*.jpg'))
 
 
 
-for file in files:
+for i, file in enumerate(files):
 
     path_and_file = os.path.join(plate_settings.path, file)
 
@@ -39,7 +39,8 @@ for file in files:
         continue
     else :
         row = rows[0]
-
+        print("id = " + str(row.id))
+        print(path_and_file)
 
 
     # mouse callback function
