@@ -57,7 +57,7 @@ for i, file in enumerate(files):
 
 
     img = cv2.imread(path_and_file, cv2.IMREAD_COLOR)
-    draw_existing_points(row, img)
+    # draw_existing_points(row, img)
 
 
 
@@ -87,6 +87,10 @@ for i, file in enumerate(files):
         if k == 27:
             break
 
+        if k == 109:
+            row.delete_instance()
+            os.remove(path_and_file)
+            break
 
 
     cv2.destroyWindow("img")
